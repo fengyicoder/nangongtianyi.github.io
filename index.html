@@ -292,6 +292,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://nangongtianyi.github.io/2021/10/23/Action-recognition/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yeyi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yeyi's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/23/Action-recognition/" itemprop="url">Action_recognition</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-23T20:59:17+08:00">
+                2021-10-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/论文/" itemprop="url" rel="index">
+                    <span itemprop="name">论文</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Spatial-Temporal-Graph-Convolutional-Networks-for-Skeleton-Based-Action-Recognition"><a href="#Spatial-Temporal-Graph-Convolutional-Networks-for-Skeleton-Based-Action-Recognition" class="headerlink" title="Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition"></a>Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>动作识别近年来蓬勃发展，涌现出了多种建模方法，例如外观、深度、光流和身体骨骼。相对其他方法来说，使用身体骨骼来建模的方法受到的关注较少，但其也能传递一些重要的信息，可以作为其他方法的补充。本文旨在一种建模人体骨骼的有效的方法。</p>
+<p>动态骨骼模态很自然的可以以一系列的人体关节的2D或3D坐标形成的时间序列来表示。早期的动态骨骼建模方法只是使用了不同时刻的关节坐标来形成特征向量再做进一步的分析，其没有利用关节之间的空间关系，近来涌现的新方法开始试图利用关节之间自然连接的新方法，取得了不错的成果。</p>
+<p>人体骨骼可以很自然的用图来表示，这时GCN模型就派上了用场。本文作者尝试扩展图神经网络，设计一种称为ST-GCN的模型来用于针对骨骼序列的动作识别任务。该模型建立在一系列的骨骼图之上，其中的每个节点对应人体的一个关节，每个节点通过边来连接，有两种类型的边，一种是符合关节自然连通性的空间边，另一种是连续时间连接相同关节的时间边。在这之上构建了多层的时空层卷积，在时间和空间维度上整合信息。</p>
+<h2 id="模型细节"><a href="#模型细节" class="headerlink" title="模型细节"></a>模型细节</h2><p>通常数据是一系列的帧，每一帧都会有一组关节坐标。给定2D或3D坐标形式的身体关节序列，构建了一个时空图，以关节为图节点，以人体结构和时间的连接作为边，因此GCN的输入是图节点上的联合坐标向量。本文工作利用时空图来形成骨骼的分层表示，在具有N个关节和T帧的骨骼序列上构建了一个无向时空图$G = (V,E)$，具有身体结构和帧间之间的连接。在这张图上，节点集$V = { {v<em>{ti} }|t = 1,…,T,i = 1,…,N} $包含了骨骼序列中的所有关节，一个第t帧第i个关节上的输入特征向量$F({v</em>{ti}})$包含了坐标以及置信度；边集由两部分组成，第一部分描述了每一帧的骨骼关节连接，表示为${E<em>S} = { {v</em>{ti}}{v<em>{tj} }|(i,j) \in H} $，$H$代表了人体的关节连接，第二部分包含了帧间的边，连接每一帧中相同的关节，用${E_F} = { {v</em>{ti} }{v_{(t + 1)i} }} $来表示。</p>
+<p>现在类比一下普通的卷积，假定卷积核大小为$k \times k$，输入特征图$f_{in}$的通道为$c$。位置在$x$处的单通道输入可以如下表示：</p>
+<p>${f<em>{out} }(x) = \sum\limits</em>{h = 1}^K {\sum\limits<em>{w = 1}^K { {f</em>{in} }(p(x,h,w)) \cdot w(h,w)} } $</p>
+<p>可将此操作扩展到时空图上，那么输入特征图$f<em>{in}^t:{V_t} \to {R^c}$在图中每个节点都有一个向量。对于一个节点的取样函数，在图中定义为邻域集$B({v</em>{ti} }) = { {v<em>{tj} }|d({v</em>{tj} },{v<em>{ti} }) \leqslant D} $，这里$d({v</em>{tj} },{v<em>{ti} })$表示从${v</em>{tj}}$到$v<em>{ti}$的最短距离。在本文中邻域指的是距离目标点距离为1的点的集合。图网络没有2D图像那样自然有序的空间结构，本文采用的方法是将邻域集划分成$K$个子集，每个子集有一个独立的标签，权重函数$w({v</em>{ti} },{v<em>{tj} }):B({v</em>{ti} }) \to {R^c}$通过索引一个（c,K）的张量实现，即按序索引每一个子集。</p>
+<p>前文阐述了取样函数以及权重函数，此时对图卷积的操作可以重写为：</p>
+<script type="math/tex; mode=display">{f_{out} }({v_{ti} }) = \sum\limits_{ {v_{tj} } \in B({v_{ti} })} {\frac{1}{ { {Z_{ti} }({v_{tj} })} }{f_{in} }(p({v_{ti}},{v_{tj} })) \cdot w({v_{ti} },{v_{tj} })}</script><p>现在从空间图扩展到时空图，则一个节点的邻域集可表示为：</p>
+<p>$B({v<em>{ti}}) = { {v</em>{qj}}|d({v<em>{tj}},{v</em>{ti}}) \leqslant K,|q - t| \leqslant \left\lfloor {\Gamma /2} \right\rfloor } $</p>
+<p>这里$\Gamma$代表控制时间范围。</p>
+<p>扩展标签映射函数，有：</p>
+<p>${l<em>{ST}}({v</em>{qj}}) = {l<em>{ti}}({v</em>{tj}}) + (q - t + \left\lfloor {\Gamma /2} \right\rfloor ) \times K$</p>
+<p>划分子集有以下三种策略：</p>
+<p>Uni-labeling：最简单且最直接的策略是将邻域看作一整个子集，形式上有$K=1$和${l<em>{ti}}({v</em>{tj}}) = 0$。</p>
+<p>Distance partition：根据邻域节点到根节点的距离来划分子集，共有两个层次，第一个层次是根节点本身，第二层次是根节点的邻域节点，形式上$K=2$和${l<em>{ti}}({v</em>{tj}}) = d({v<em>{tj}},{v</em>{ti}})$。</p>
+<p>Spatial configuration partitioning：将整个采样域划分为三个子集：根节点，比根节点更靠近中心的向心节点子集，其余的离心节点子集。</p>
+<p>这三种策略的示意图如图1所示：</p>
+<p><img src="\img\STG1.png" alt=""></p>
+<p>另外对于动作识别，每个关节的重要性也不是相等的，因此为时空图卷积的每一层都添加了一个可学习的mask，基于学习到空间图边的重要性来缩放相邻节点的特征值。</p>
+<p>下面来实现ST-GCN模型，单帧关节之间的自然连接被建模成为邻接矩阵$A$，单位矩阵$I$代表自连接。对于第一种划分策略，ST-GCN实现如下：</p>
+<script type="math/tex; mode=display">{f_{out}} = {\Lambda ^{ - \frac{1}{2}}}(A + I){\Lambda ^{ - \frac{1}{2}}}{f_{in}}W</script><p>这里有${A^{ii}} = \sum\nolimits_j {({A^{ij}} + {I^{ij}})} $。在实际中，输入特征图以张量$(C,V,T)$来表示，图卷积通过执行$1 \times \Gamma $的标准二维卷积，之后将结果在第二维上乘上正则化的邻接矩阵${\Lambda ^{ - \frac{1}{2}}}(A + I){\Lambda ^{ - \frac{1}{2}}}$。</p>
+<p>对于其他的划分策略，我们仍旧使用此种计算方式，不过现在邻接矩阵被分成了几个子矩阵$A_j$，这里$A + I = \sum\nolimits_j  $，输出可以写为：</p>
+<p>${f<em>{out}} = \sum\limits_j {\Lambda _j^{ - \frac{1}{2}}{A_j}} \Lambda _j^{ - \frac{1}{2}}{f</em>{in}}{W_j}$</p>
+<p>对于边的权重矩阵很简单，只需要添加一个可学习的矩阵$M$，式中的某些项变为</p>
+<p>$(A + I) \otimes M$或者${A_j} \otimes M$。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://nangongtianyi.github.io/2021/03/23/机器学习工程的三十个最佳实践/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -391,152 +558,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/03/23/机器学习工程的三十个最佳实践/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://nangongtianyi.github.io/2021/03/21/文本分类/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yeyi">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yeyi's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/03/21/文本分类/" itemprop="url">文本分类</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-21T16:16:30+08:00">
-                2021-03-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/文章/" itemprop="url" rel="index">
-                    <span itemprop="name">文章</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="TextCNN"><a href="#TextCNN" class="headerlink" title="TextCNN"></a>TextCNN</h1><p>文本分类问题常见的解决方式是抽取文本的特征，比如使用doc2evc或者LDA模型将文本转换成一个固定维度上的特征向量，然后在基于抽取的特征基础上训练一个分类器。TextCNN的本质也是如此，其通过一维卷积来获取句子中的n-gram的特征表示。TextCNN对于文本浅层特征的抽取能力很强，在短文本领域如搜索、对话领域专注于意图分类时效果很好，应用广泛且速度快；但在长文本领域，由于其主要靠filter窗口来抽取特征，因此长距离建模能力受限，且对语序不敏感。以下是经典的TextCnn模型结构：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/03/21/文本分类/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
