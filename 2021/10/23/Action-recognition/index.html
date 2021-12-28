@@ -80,18 +80,18 @@
 
 
 
-<meta name="description" content="Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition背景动作识别近年来蓬勃发展，涌现出了多种建模方法，例如外观、深度、光流和身体骨骼。相对其他方法来说，使用身体骨骼来建模的方法受到的关注较少，但其也能传递一些重要的信息，可以作为其他方法的补充。本文旨在一种建模人体骨骼的有效的方法。 动">
+<meta name="description" content="Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition背景动作识别近年来蓬勃发展，涌现出了多种建模方法，例如外观、深度、光流和身体骨骼。相对其他方法来说，使用身体骨骼来建模的方法受到的关注较少，但其也能传递一些重要的信息，可以作为其他方法的补充。本文旨在一种建模人体骨骼的有效的方法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Action_recognition">
 <meta property="og:url" content="http://nangongtianyi.github.io/2021/10/23/Action-recognition/index.html">
 <meta property="og:site_name" content="Yeyi&#39;s Blog">
-<meta property="og:description" content="Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition背景动作识别近年来蓬勃发展，涌现出了多种建模方法，例如外观、深度、光流和身体骨骼。相对其他方法来说，使用身体骨骼来建模的方法受到的关注较少，但其也能传递一些重要的信息，可以作为其他方法的补充。本文旨在一种建模人体骨骼的有效的方法。 动">
+<meta property="og:description" content="Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition背景动作识别近年来蓬勃发展，涌现出了多种建模方法，例如外观、深度、光流和身体骨骼。相对其他方法来说，使用身体骨骼来建模的方法受到的关注较少，但其也能传递一些重要的信息，可以作为其他方法的补充。本文旨在一种建模人体骨骼的有效的方法。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://nangongtianyi.github.io/img/STG1.png">
-<meta property="og:updated_time" content="2021-12-27T14:01:26.194Z">
+<meta property="og:updated_time" content="2021-12-28T11:41:07.024Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Action_recognition">
-<meta name="twitter:description" content="Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition背景动作识别近年来蓬勃发展，涌现出了多种建模方法，例如外观、深度、光流和身体骨骼。相对其他方法来说，使用身体骨骼来建模的方法受到的关注较少，但其也能传递一些重要的信息，可以作为其他方法的补充。本文旨在一种建模人体骨骼的有效的方法。 动">
+<meta name="twitter:description" content="Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition背景动作识别近年来蓬勃发展，涌现出了多种建模方法，例如外观、深度、光流和身体骨骼。相对其他方法来说，使用身体骨骼来建模的方法受到的关注较少，但其也能传递一些重要的信息，可以作为其他方法的补充。本文旨在一种建模人体骨骼的有效的方法。">
 <meta name="twitter:image" content="http://nangongtianyi.github.io/img/STG1.png">
 
 
@@ -387,6 +387,7 @@
 
       
         <h1 id="Spatial-Temporal-Graph-Convolutional-Networks-for-Skeleton-Based-Action-Recognition"><a href="#Spatial-Temporal-Graph-Convolutional-Networks-for-Skeleton-Based-Action-Recognition" class="headerlink" title="Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition"></a>Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>动作识别近年来蓬勃发展，涌现出了多种建模方法，例如外观、深度、光流和身体骨骼。相对其他方法来说，使用身体骨骼来建模的方法受到的关注较少，但其也能传递一些重要的信息，可以作为其他方法的补充。本文旨在一种建模人体骨骼的有效的方法。</p>
+<a id="more"></a>
 <p>动态骨骼模态很自然的可以以一系列的人体关节的2D或3D坐标形成的时间序列来表示。早期的动态骨骼建模方法只是使用了不同时刻的关节坐标来形成特征向量再做进一步的分析，其没有利用关节之间的空间关系，近来涌现的新方法开始试图利用关节之间自然连接的新方法，取得了不错的成果。</p>
 <p>人体骨骼可以很自然的用图来表示，这时GCN模型就派上了用场。本文作者尝试扩展图神经网络，设计一种称为ST-GCN的模型来用于针对骨骼序列的动作识别任务。该模型建立在一系列的骨骼图之上，其中的每个节点对应人体的一个关节，每个节点通过边来连接，有两种类型的边，一种是符合关节自然连通性的空间边，另一种是连续时间连接相同关节的时间边。在这之上构建了多层的时空层卷积，在时间和空间维度上整合信息。</p>
 <h2 id="模型细节"><a href="#模型细节" class="headerlink" title="模型细节"></a>模型细节</h2><p>通常数据是一系列的帧，每一帧都会有一组关节坐标。给定2D或3D坐标形式的身体关节序列，构建了一个时空图，以关节为图节点，以人体结构和时间的连接作为边，因此GCN的输入是图节点上的联合坐标向量。本文工作利用时空图来形成骨骼的分层表示，在具有N个关节和T帧的骨骼序列上构建了一个无向时空图$G = (V,E)$，具有身体结构和帧间之间的连接。在这张图上，节点集$V = { {v<em>{ti} }|t = 1,…,T,i = 1,…,N} $包含了骨骼序列中的所有关节，一个第t帧第i个关节上的输入特征向量$F({v</em>{ti}})$包含了坐标以及置信度；边集由两部分组成，第一部分描述了每一帧的骨骼关节连接，表示为${E<em>S} = { {v</em>{ti}}{v<em>{tj} }|(i,j) \in H} $，$H$代表了人体的关节连接，第二部分包含了帧间的边，连接每一帧中相同的关节，用${E_F} = { {v</em>{ti} }{v_{(t + 1)i} }} $来表示。</p>
