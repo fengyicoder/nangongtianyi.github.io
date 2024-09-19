@@ -80,7 +80,7 @@ theme: next
 deploy:
   type: git
   repo:
-    git@github:nangongtianyi/nangongtianyi.github.io.git
+    git@github:fengyicoder/nangongtianyi.github.io.git
     # github: git@github.com:nangongtianyi/nangongtianyi.github.io.git,master
     # coding: https://git.dev.tencent.com/yeyi999/githubio.git
   branch: master
